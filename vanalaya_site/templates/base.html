@@ -1,0 +1,120 @@
+{% from "_icons.html" import icon %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ S.studio_name }} | Architecture, Interiors and Bamboo Design in Coorg{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ S.studio_name }} is an architecture, interior design and civil engineering studio in Virajpet, Coorg, specialising in sustainable, mud and bamboo architecture.{% endblock %}">
+<meta name="theme-color" content="#1f3d2b">
+<link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ site_url }}{% block ogimage %}{{ url_for('static', filename='img/logo.jpg') }}{% endblock %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "name": S.studio_name,
+  "description": "Architecture, interior design, landscape design, sustainable mud and bamboo architecture and civil engineering services.",
+  "telephone": "+91" + S.phone,
+  "email": S.email,
+  "url": site_url,
+  "image": site_url + url_for('static', filename='img/logo.jpg'),
+  "address": {"@type": "PostalAddress", "addressLocality": "Virajpet", "addressRegion": "Karnataka", "addressCountry": "IN"},
+  "sameAs": ["https://www.instagram.com/" + S.instagram]
+} | tojson }}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-in">
+    <a class="brand" href="{{ url_for('home') }}" aria-label="{{ S.studio_name }} home">
+      <img src="{{ url_for('static', filename='img/logo-256.png') }}" alt="" width="46" height="46">
+      <span class="brand-text"><strong>VANALAYA</strong><small>STUDIO</small></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}aria-current="page"{% endif %}>Home</a>
+      <a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}aria-current="page"{% endif %}>About</a>
+      <a href="{{ url_for('services') }}" {% if request.endpoint == 'services' %}aria-current="page"{% endif %}>Services</a>
+      <a href="{{ url_for('projects') }}" {% if request.endpoint in ('projects', 'project_detail') %}aria-current="page"{% endif %}>Projects</a>
+      <a href="{{ url_for('testimonials') }}" {% if request.endpoint == 'testimonials' %}aria-current="page"{% endif %}>Testimonials</a>
+      <a href="{{ url_for('contact') }}" {% if request.endpoint == 'contact' %}aria-current="page"{% endif %}>Contact</a>
+      <a class="btn btn-small nav-cta" href="{{ url_for('contact') }}">{{ S.cta_text }}</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<section class="cta-band">
+  <div class="wrap cta-in">
+    <div>
+      <h2>Planning a home, a space or a bamboo project?</h2>
+      <p>Tell us about your plot and your ideas. We will get back to you personally.</p>
+    </div>
+    <div class="cta-buttons">
+      <a class="btn btn-gold" href="{{ url_for('contact') }}">{{ S.cta_text }}</a>
+      <a class="btn btn-ghost-light" href="https://wa.me/{{ S.whatsapp }}?text={{ 'Hello Vanalaya Studio, I would like to discuss a project.' | urlencode }}">{{ icon('whatsapp', 20) }} WhatsApp us</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <div class="brand brand-light">
+        <img src="{{ url_for('static', filename='img/logo-256.png') }}" alt="" width="52" height="52">
+        <span class="brand-text"><strong>VANALAYA</strong><small>STUDIO</small></span>
+      </div>
+      <p class="foot-note">{{ S.tagline }}. Architecture, interiors, bamboo design and civil engineering.</p>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('services') }}">Services</a></li>
+        <li><a href="{{ url_for('projects') }}">Projects</a></li>
+        <li><a href="{{ url_for('testimonials') }}">Testimonials</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Projects</h3>
+      <ul>
+        {% for c in nav_categories %}<li><a href="{{ url_for('projects', category=c.slug) }}">{{ c.name }}</a></li>{% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul class="contact-list">
+        <li>{{ icon('phone', 18) }} <a href="tel:+91{{ S.phone }}">{{ S.phone }}</a></li>
+        <li>{{ icon('mail', 18) }} <a href="mailto:{{ S.email }}">{{ S.email }}</a></li>
+        <li>{{ icon('pin', 18) }} <span>{{ S.address }}</span></li>
+        <li>{{ icon('instagram', 18) }} <a href="https://www.instagram.com/{{ S.instagram }}" target="_blank" rel="noopener">@{{ S.instagram }}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>&copy; {{ current_year }} {{ S.studio_name }}. All rights reserved.</span>
+    <a href="{{ url_for('admin_login') }}">Admin</a>
+  </div>
+</footer>
+
+<div class="float-actions" aria-label="Quick contact">
+  <a class="float-btn float-call" href="tel:+91{{ S.phone }}" aria-label="Call us">{{ icon('phone', 24) }}</a>
+  <a class="float-btn float-wa" href="https://wa.me/{{ S.whatsapp }}?text={{ 'Hello Vanalaya Studio, I would like to discuss a project.' | urlencode }}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">{{ icon('whatsapp', 26) }}</a>
+</div>
+
+<script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
+</body>
+</html>

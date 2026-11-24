@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'New project' if is_new else 'Edit project' }}{% endblock %}
+{% block content %}
+<div class="row" style="justify-content:space-between;margin-bottom:14px">
+  <h1 style="margin:0">{{ 'Add a project' if is_new else 'Edit project' }}</h1>
+  <a class="btn btn-light" href="{{ url_for('admin_projects') }}">&larr; All projects</a>
+</div>
+
+<form method="post" class="panel">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Project title *<input type="text" name="title" value="{{ p.title }}" required maxlength="160"></label>
+  <div class="two">
+    <label>Category *
+      <select name="category" required>
+        <option value="">Choose a category</option>
+        {% for c in cats %}<option value="{{ c.slug }}" {{ 'selected' if p.category == c.slug }}>{{ c.name }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Location <span class="help">(for example Virajpet, Coorg)</span><input type="text" name="location" value="{{ p.location }}" maxlength="160"></label>
+  </div>
+  <div class="two">
+    <label>Area <span class="help">(optional, for example 2,400 sq ft)</span><input type="text" name="area" value="{{ p.area }}" maxlength="80"></label>
+    <label>Our role <span class="help">(for example Architecture and construction)</span><input type="text" name="studio_role" value="{{ p.studio_role }}" maxlength="160"></label>
+  </div>
+  <label>Short summary <span class="help">(one line shown on project cards)</span><input type="text" name="summary" value="{{ p.summary }}" maxlength="220"></label>
+  <label>Full description <span class="help">(leave a blank line between paragraphs)</span><textarea name="description" rows="7">{{ p.description }}</textarea></label>
+  <div class="two">
+    <label>Tags <span class="help">(comma separated, for example bamboo, eco, gate)</span><input type="text" name="tags" value="{{ p.tags }}"></label>
+    <label>Video link <span class="help">(optional, a YouTube link works best)</span><input type="url" name="video_url" value="{{ p.video_url }}" placeholder="https://"></label>
+  </div>
+  <div class="row" style="gap:24px;margin-bottom:16px">
+    <label class="check"><input type="checkbox" name="published" value="1" {{ 'checked' if p.published }}> Show on the website</label>
+    <label class="check"><input type="checkbox" name="featured" value="1" {{ 'checked' if p.featured }}> Feature on the home page</label>
+  </div>
+  <button class="btn btn-gold">{{ 'Create project' if is_new else 'Save changes' }}</button>
+  {% if not is_new %}<a class="btn btn-light" href="{{ url_for('project_detail', slug=p.slug) }}" target="_blank" rel="noopener">View on site</a>{% endif %}
+</form>
+
+{% if not is_new %}
+<div class="panel" id="photos">
+  <h2>Photos</h2>
+  <p class="muted">The first photo, or the one marked Cover, is shown on project cards. Photos are resized automatically, so you can upload them straight from a phone or camera. JPG, PNG and WebP are supported.</p>
+  <form method="post" action="{{ url_for('admin_photos_upload', pid=p.id) }}" enctype="multipart/form-data" class="row" style="margin-bottom:18px">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple required style="flex:1;min-width:220px">
+    <button class="btn">Upload photos</button>
+  </form>
+  {% if images %}
+  <div class="photos">
+    {% for im in images %}
+    <div class="photo">
+      <img src="{{ url_for('media', filename=im.filename ~ '_t.jpg') }}" alt="">
+      <div class="row">
+        {% if im.is_cover %}<span class="cover-tag">COVER</span>{% else %}
+        <form method="post" action="{{ url_for('admin_photo_action', iid=im.id, action='cover') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light">Make cover</button></form>{% endif %}
+        <form method="post" action="{{ url_for('admin_photo_action', iid=im.id, action='up') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light" aria-label="Move earlier">←</button></form>
+        <form method="post" action="{{ url_for('admin_photo_action', iid=im.id, action='down') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light" aria-label="Move later">→</button></form>
+        <form method="post" action="{{ url_for('admin_photo_action', iid=im.id, action='delete') }}" data-confirm="Delete this photo?"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-red">Delete</button></form>
+      </div>
+      <form method="post" action="{{ url_for('admin_photo_action', iid=im.id, action='caption') }}" class="row">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="text" name="caption" value="{{ im.caption }}" placeholder="Caption (optional)" maxlength="200" style="flex:1">
+        <button class="btn btn-sm btn-light">Save</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}<p class="muted">No photos yet.</p>{% endif %}
+</div>
+
+<div class="panel">
+  <h2>Delete this project</h2>
+  <p class="muted">This removes the project and all its photos. To only take it off the website for now, untick "Show on the website" above instead.</p>
+  <form method="post" action="{{ url_for('admin_project_delete', pid=p.id) }}" data-confirm="Delete this project and all its photos? This cannot be undone.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn btn-red">Delete project</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

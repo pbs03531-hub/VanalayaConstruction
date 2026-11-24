@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block title %}Site text{% endblock %}
+{% block content %}
+<h1>Site text and contact details</h1>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% for group, fields in groups %}
+  <div class="panel">
+    <h2>{{ group }}</h2>
+    {% for key, label, kind in fields %}
+    <label>{{ label }}
+      {% if kind == 'area' %}<textarea name="{{ key }}" rows="5">{{ S[key] }}</textarea>
+      {% else %}<input type="text" name="{{ key }}" value="{{ S[key] }}">{% endif %}
+    </label>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-gold">Save all</button>
+</form>
+{% endblock %}

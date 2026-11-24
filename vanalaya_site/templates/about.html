@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}About | {{ S.studio_name }}{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow eyebrow-light">About us</p>
+    <h1>{{ S.about_title }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap about-grid">
+    <div class="prose">{{ S.about_text | paragraphs }}</div>
+    <aside class="founder">
+      <div class="founder-mark">{{ S.founder_name[:1] if S.founder_name else 'V' }}</div>
+      <h3>{{ S.founder_name }}</h3>
+      <p class="role">{{ S.founder_role }}</p>
+      <p>{{ S.founder_text }}</p>
+    </aside>
+  </div>
+</section>
+
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How we work</p>
+      <h2>From first conversation to finished space</h2>
+    </div>
+    <ol class="steps">
+      {% for title, text in approach %}
+      <li><span class="step-n">{{ loop.index }}</span><h3>{{ title }}</h3><p>{{ text }}</p></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="eco">
+  <div class="wrap eco-in">
+    <div>
+      <p class="eyebrow eyebrow-light">Our philosophy</p>
+      <h2>{{ S.eco_title }}</h2>
+      <p>{{ S.eco_text }}</p>
+    </div>
+    <ul class="eco-list">
+      <li>{{ icon('bamboo', 28) }}<span><strong>Mud and bamboo architecture</strong> a core craft of the studio</span></li>
+      <li>{{ icon('leaf', 28) }}<span><strong>Landscape design</strong> buildings that sit well in their setting</span></li>
+      <li>{{ icon('column', 28) }}<span><strong>Conservation and restoration</strong> protecting older buildings</span></li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

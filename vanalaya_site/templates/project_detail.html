@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_cards.html" import project_card %}
+{% block title %}{{ p.title }} | {{ S.studio_name }}{% endblock %}
+{% block description %}{{ p.summary or p.title }}{% endblock %}
+{% block ogimage %}{% if images %}{{ url_for('media', filename=images[0].filename ~ '.jpg') }}{% else %}{{ url_for('static', filename='img/logo.jpg') }}{% endif %}{% endblock %}
+{% block content %}
+<section class="page-head page-head-small">
+  <div class="wrap">
+    <p class="crumbs"><a href="{{ url_for('projects') }}">Projects</a> / <a href="{{ url_for('projects', category=p.category) }}">{{ p.category_name }}</a></p>
+    <h1>{{ p.title }}</h1>
+    {% if p.location %}<p class="head-loc">{{ icon('pin', 18) }} {{ p.location }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap detail-grid">
+    <div class="detail-main">
+      {% if images %}
+      <div class="gallery">
+        <button class="gallery-main" type="button" data-full="{{ url_for('media', filename=images[0].filename ~ '.jpg') }}" aria-label="Open photo full screen">
+          <img id="galleryMain" src="{{ url_for('media', filename=images[0].filename ~ '.jpg') }}" alt="{{ images[0].caption or p.title }}">
+        </button>
+        {% if images|length > 1 %}
+        <div class="thumbs">
+          {% for im in images %}
+          <button type="button" class="thumb {{ 'on' if loop.first }}" data-src="{{ url_for('media', filename=im.filename ~ '.jpg') }}" data-alt="{{ im.caption or p.title }}">
+            <img src="{{ url_for('media', filename=im.filename ~ '_t.jpg') }}" alt="" loading="lazy">
+          </button>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if images[0].caption %}<p class="caption" id="galleryCaption">{{ images[0].caption }}</p>{% endif %}
+      </div>
+      {% else %}
+      <div class="gallery-empty cat-{{ p.category }}"><div class="ph"><span>Photos coming soon</span></div></div>
+      {% endif %}
+
+      <div class="prose">{{ p.description | paragraphs }}</div>
+
+      {% set embed = p.video_url | youtube_embed %}
+      {% if embed %}
+      <div class="video"><iframe src="{{ embed }}" title="Project video" loading="lazy" allowfullscreen></iframe></div>
+      {% elif p.video_url %}
+      <p><a class="btn btn-outline" href="{{ p.video_url }}" target="_blank" rel="noopener">Watch the walkthrough</a></p>
+      {% endif %}
+    </div>
+
+    <aside class="detail-side">
+      <h3>Project details</h3>
+      <dl>
+        <dt>Category</dt><dd>{{ p.category_name }}</dd>
+        {% if p.location %}<dt>Location</dt><dd>{{ p.location }}</dd>{% endif %}
+        {% if p.area %}<dt>Area</dt><dd>{{ p.area }}</dd>{% endif %}
+        {% if p.studio_role %}<dt>Our role</dt><dd>{{ p.studio_role }}</dd>{% endif %}
+      </dl>
+      {% if p.tags %}<div class="tags">{% for t in p.tags | taglist %}<span>{{ t }}</span>{% endfor %}</div>{% endif %}
+      <div class="side-cta">
+        <p><strong>Planning something like this?</strong></p>
+        <a class="btn btn-block" href="{{ url_for('contact', project=p.title) }}">{{ S.cta_text }}</a>
+        <a class="btn btn-outline btn-block" href="https://wa.me/{{ S.whatsapp }}?text={{ ('Hello Vanalaya Studio, I saw your project ' ~ p.title ~ ' and would like to discuss something similar.') | urlencode }}">{{ icon('whatsapp', 20) }} WhatsApp us</a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% if related %}
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="section-head"><h2>More {{ p.category_name | lower }} projects</h2></div>
+    <div class="grid">{% for r in related %}{{ project_card(r) }}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+<div class="lightbox" id="lightbox" hidden><button type="button" class="lightbox-close" aria-label="Close">&times;</button><img alt=""></div>
+{% endblock %}

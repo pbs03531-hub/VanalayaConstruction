@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{% block title %}Admin{% endblock %} | {{ S.studio_name }}</title>
+<link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+{% if is_admin %}
+<header class="a-top">
+  <a class="a-brand" href="{{ url_for('admin_dashboard') }}"><img src="{{ url_for('static', filename='img/logo-256.png') }}" alt="" width="34" height="34"> Vanalaya Admin</a>
+  <nav class="a-nav">
+    <a href="{{ url_for('admin_dashboard') }}" {% if request.endpoint == 'admin_dashboard' %}class="on"{% endif %}>Dashboard</a>
+    <a href="{{ url_for('admin_projects') }}" {% if request.endpoint and 'project' in request.endpoint or request.endpoint == 'admin_photos_upload' %}class="on"{% endif %}>Projects</a>
+    <a href="{{ url_for('admin_enquiries') }}" {% if request.endpoint == 'admin_enquiries' %}class="on"{% endif %}>Enquiries</a>
+    <a href="{{ url_for('admin_services') }}" {% if request.endpoint == 'admin_services' %}class="on"{% endif %}>Services</a>
+    <a href="{{ url_for('admin_testimonials') }}" {% if request.endpoint == 'admin_testimonials' %}class="on"{% endif %}>Testimonials</a>
+    <a href="{{ url_for('admin_site') }}" {% if request.endpoint == 'admin_site' %}class="on"{% endif %}>Site text</a>
+  </nav>
+  <div class="a-right">
+    <a href="{{ url_for('home') }}" target="_blank" rel="noopener">View site</a>
+    <a href="{{ url_for('admin_password') }}">Password</a>
+    <form method="post" action="{{ url_for('admin_logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link">Log out</button></form>
+  </div>
+</header>
+{% endif %}
+<main class="a-main">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="flashes" role="alert">{% for cat, m in messages %}<p class="flash flash-{{ cat }}">{{ m }}</p>{% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<script>
+document.querySelectorAll('form[data-confirm]').forEach(function (f) {
+  f.addEventListener('submit', function (e) { if (!confirm(f.dataset.confirm)) e.preventDefault(); });
+});
+</script>
+</body>
+</html>

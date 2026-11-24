@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="login panel">
+  <h1>Admin log in</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username<input type="text" name="username" autocomplete="username" required autofocus></label>
+    <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn btn-gold" style="width:100%">Log in</button>
+  </form>
+  <p class="muted" style="text-align:center;margin:14px 0 0"><a href="{{ url_for('home') }}">Back to the website</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<div class="row" style="justify-content:space-between;margin-bottom:14px">
+  <h1 style="margin:0">Projects</h1>
+  <a class="btn btn-gold" href="{{ url_for('admin_project_new') }}">+ Add project</a>
+</div>
+<div class="panel tablewrap">
+<table>
+  <tr><th>Project</th><th>Category</th><th>Photos</th><th>Status</th><th>Order</th><th></th></tr>
+  {% for p in projects %}
+  <tr>
+    <td><a href="{{ url_for('admin_project_edit', pid=p.id) }}"><strong>{{ p.title }}</strong></a>{% if p.location %}<br><span class="muted">{{ p.location }}</span>{% endif %}</td>
+    <td>{{ p.category_name }}</td>
+    <td>{{ p.photos }}{% if not p.photos %} <span class="badge off">none</span>{% endif %}</td>
+    <td>
+      <form method="post" action="{{ url_for('admin_project_toggle', pid=p.id, field='published') }}" style="display:inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light">{{ 'Visible' if p.published else 'Hidden' }}</button></form>
+      <form method="post" action="{{ url_for('admin_project_toggle', pid=p.id, field='featured') }}" style="display:inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light">{{ '★ Featured' if p.featured else '☆ Feature' }}</button></form>
+    </td>
+    <td>
+      <div class="row">
+        <form method="post" action="{{ url_for('admin_project_move', pid=p.id, direction='up') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light" aria-label="Move up">↑</button></form>
+        <form method="post" action="{{ url_for('admin_project_move', pid=p.id, direction='down') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-light" aria-label="Move down">↓</button></form>
+      </div>
+    </td>
+    <td><a class="btn btn-sm" href="{{ url_for('admin_project_edit', pid=p.id) }}">Edit</a></td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

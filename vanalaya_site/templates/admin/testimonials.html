@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block content %}
+<h1>Testimonials</h1>
+<form method="post" class="panel">
+  <h2>Add a testimonial</h2>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="action" value="add">
+  <div class="two">
+    <label>Client name *<input type="text" name="client_name" required></label>
+    <label>Project <span class="help">(optional)</span><input type="text" name="project_name"></label>
+  </div>
+  <label>What they said *<textarea name="quote" rows="3" required></textarea></label>
+  <p class="help">Only add testimonials you have the client's permission to publish.</p>
+  <button class="btn btn-gold">Add testimonial</button>
+</form>
+{% for t in testimonials %}
+<form method="post" class="item">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="id" value="{{ t.id }}">
+  <div class="two">
+    <label>Client name<input type="text" name="client_name" value="{{ t.client_name }}" required></label>
+    <label>Project<input type="text" name="project_name" value="{{ t.project_name }}"></label>
+  </div>
+  <label>Quote<textarea name="quote" rows="3" required>{{ t.quote }}</textarea></label>
+  <div class="row">
+    <label class="check" style="margin:0"><input type="checkbox" name="published" value="1" {{ 'checked' if t.published }}> Show on website</label>
+    <button class="btn btn-sm" name="action" value="save">Save</button>
+    <button class="btn btn-sm btn-red" name="action" value="delete" formnovalidate onclick="return confirm('Delete this testimonial?')">Delete</button>
+  </div>
+</form>
+{% endfor %}
+{% endblock %}

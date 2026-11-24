@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: vanalaya-studio
+    runtime: python
+    plan: starter   # persistent disk needs a paid plan
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 2 --bind 0.0.0.0:$PORT
+    disk:
+      name: vanalaya-data
+      mountPath: /var/data
+      sizeGB: 2
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: BEHIND_PROXY
+        value: "1"
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: NOTIFY_EMAIL
+        sync: false

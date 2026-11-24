@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Contact | {{ S.studio_name }}{% endblock %}
+{% block description %}Contact Vanalaya Studio in Virajpet, Coorg for architecture, interior design, bamboo construction and civil engineering. Call, WhatsApp or send an enquiry.{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow eyebrow-light">Contact</p>
+    <h1>Let us talk about your project</h1>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap contact-grid">
+    <div>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}<div class="flashes" role="alert">{% for cat, m in messages %}<p class="flash flash-{{ cat }}">{{ m }}</p>{% endfor %}</div>{% endif %}
+      {% endwith %}
+      <form method="post" class="form" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label>Your name *<input type="text" name="name" value="{{ form.name }}" required autocomplete="name"></label>
+        <div class="two">
+          <label>Phone<input type="tel" name="phone" value="{{ form.phone }}" autocomplete="tel" inputmode="tel"></label>
+          <label>Email<input type="email" name="email" value="{{ form.email }}" autocomplete="email"></label>
+        </div>
+        <label>What are you planning?
+          <select name="project_type">
+            <option value="">Choose one</option>
+            {% for t in project_types %}<option value="{{ t }}" {{ 'selected' if form.project_type == t }}>{{ t }}</option>{% endfor %}
+            {% if form.project_type and form.project_type not in project_types %}<option value="{{ form.project_type }}" selected>{{ form.project_type }}</option>{% endif %}
+          </select>
+        </label>
+        <label>Tell us about your project *<textarea name="message" rows="6" required placeholder="Plot size, location, what you would like to build and any timeline.">{{ form.message }}</textarea></label>
+        <button class="btn btn-gold btn-block" type="submit">Send enquiry</button>
+        <p class="fine">We reply personally. Please give at least a phone number or an email.</p>
+      </form>
+    </div>
+    <aside class="contact-side">
+      <h3>Reach us directly</h3>
+      <ul class="contact-list big">
+        <li>{{ icon('phone', 22) }} <a href="tel:+91{{ S.phone }}">{{ S.phone }}</a></li>
+        <li>{{ icon('whatsapp', 22) }} <a href="https://wa.me/{{ S.whatsapp }}?text={{ 'Hello Vanalaya Studio, I would like to discuss a project.' | urlencode }}">Chat on WhatsApp</a></li>
+        <li>{{ icon('mail', 22) }} <a href="mailto:{{ S.email }}">{{ S.email }}</a></li>
+        <li>{{ icon('instagram', 22) }} <a href="https://www.instagram.com/{{ S.instagram }}" target="_blank" rel="noopener">@{{ S.instagram }}</a></li>
+        <li>{{ icon('pin', 22) }} <span>{{ S.address }}</span></li>
+      </ul>
+      <div class="map">
+        <iframe title="Map of Virajpet, Coorg" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Virajpet,+Coorg&output=embed"></iframe>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

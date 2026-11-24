@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Services | {{ S.studio_name }}{% endblock %}
+{% block description %}Architecture design, interior design, landscape design, sustainable and bamboo architecture, conservation and civil engineering services from Vanalaya Studio in Coorg.{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow eyebrow-light">Services</p>
+    <h1>Everything your building needs, from first sketch to final site visit</h1>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="grid grid-3">
+      {% for s in services %}
+      <div class="service">
+        <div class="service-icon">{{ icon(s.icon, 30) }}</div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.description }}</p>
+        <a class="more" href="{{ url_for('contact', type=s.title) }}">Ask about this &rarr;</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

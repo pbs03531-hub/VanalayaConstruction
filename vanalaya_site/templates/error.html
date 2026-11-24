@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} | {{ S.studio_name }}{% endblock %}
+{% block content %}
+<section class="section thanks">
+  <div class="wrap narrow center">
+    <p class="eyebrow">Error {{ code }}</p>
+    <h1>{{ message }}</h1>
+    <p><a class="btn" href="{{ url_for('home') }}">Back to home</a> <a class="btn btn-outline" href="{{ url_for('contact') }}">Contact us</a></p>
+  </div>
+</section>
+{% endblock %}

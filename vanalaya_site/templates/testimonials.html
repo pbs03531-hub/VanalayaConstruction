@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Testimonials | {{ S.studio_name }}{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow eyebrow-light">Testimonials</p>
+    <h1>What our clients say</h1>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    {% if testimonials %}
+    <div class="grid grid-3">
+      {% for t in testimonials %}
+      <figure class="quote">
+        <blockquote>&ldquo;{{ t.quote }}&rdquo;</blockquote>
+        <figcaption><strong>{{ t.client_name }}</strong>{% if t.project_name %}<span>{{ t.project_name }}</span>{% endif %}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">Client reviews will appear here soon. <a href="{{ url_for('projects') }}">See our projects</a> in the meantime.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

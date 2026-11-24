@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% block title %}Enquiries{% endblock %}
+{% block content %}
+<h1>Enquiries</h1>
+<div class="row" style="margin-bottom:14px">
+  <a class="btn {{ 'btn-gold' if not status else 'btn-light' }} btn-sm" href="{{ url_for('admin_enquiries') }}">All</a>
+  {% for s in statuses %}<a class="btn btn-sm {{ 'btn-gold' if status == s else 'btn-light' }}" href="{{ url_for('admin_enquiries', status=s) }}">{{ s | capitalize }}</a>{% endfor %}
+</div>
+{% for e in enquiries %}
+<div class="item">
+  <div class="row" style="justify-content:space-between">
+    <div><strong>{{ e.name }}</strong> <span class="badge {{ e.status }}">{{ e.status }}</span><br><span class="muted">{{ e.created_at | nicedate }}{% if e.project_type %} &middot; {{ e.project_type }}{% endif %}</span></div>
+    <div class="row">
+      {% if e.phone %}<a class="btn btn-sm" href="tel:{{ e.phone }}">Call</a>
+      <a class="btn btn-sm btn-light" href="https://wa.me/{{ e.phone | wa_number }}" target="_blank" rel="noopener">WhatsApp</a>{% endif %}
+      {% if e.email %}<a class="btn btn-sm btn-light" href="mailto:{{ e.email }}">Email</a>{% endif %}
+    </div>
+  </div>
+  <p style="white-space:pre-wrap;margin:12px 0">{{ e.message }}</p>
+  <p class="muted" style="margin:0 0 10px">{{ e.phone }} {{ e.email }}</p>
+  <form method="post" action="{{ url_for('admin_enquiry_update', eid=e.id, status=status) }}" class="row">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <select name="status" style="width:auto;margin:0">{% for s in statuses %}<option value="{{ s }}" {{ 'selected' if e.status == s }}>{{ s | capitalize }}</option>{% endfor %}</select>
+    <input type="text" name="private_note" value="{{ e.private_note }}" placeholder="Private note (only you can see this)" style="flex:1;margin:0;min-width:200px">
+    <button class="btn btn-sm">Save</button>
+  </form>
+  <form method="post" action="{{ url_for('admin_enquiry_delete', eid=e.id) }}" data-confirm="Delete this enquiry?" style="margin-top:8px">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link muted" style="color:#a31621;font-size:.84rem">Delete</button>
+  </form>
+</div>
+{% else %}
+<div class="panel"><p class="muted" style="margin:0">No enquiries here yet.</p></div>
+{% endfor %}
+{% endblock %}

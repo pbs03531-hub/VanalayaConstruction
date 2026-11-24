@@ -1,0 +1,18 @@
+{% macro project_card(p) -%}
+<a class="card project-card" href="{{ url_for('project_detail', slug=p.slug) }}">
+  <div class="card-img cat-{{ p.category }}">
+    {% if p.cover %}
+      <img src="{{ url_for('media', filename=p.cover ~ '_t.jpg') }}" alt="{{ p.title }}" loading="lazy">
+    {% else %}
+      <div class="ph"><span>{{ p.category_name }}</span></div>
+    {% endif %}
+    <span class="chip">{{ p.category_name }}</span>
+  </div>
+  <div class="card-body">
+    <h3>{{ p.title }}</h3>
+    {% if p.location %}<p class="loc">{{ p.location }}</p>{% endif %}
+    <p>{{ p.summary }}</p>
+    <span class="more">View project &rarr;</span>
+  </div>
+</a>
+{%- endmacro %}

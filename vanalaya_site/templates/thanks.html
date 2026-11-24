@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Thank you | {{ S.studio_name }}{% endblock %}
+{% block content %}
+<section class="section thanks">
+  <div class="wrap narrow center">
+    <div class="tick">{{ icon('check', 40) }}</div>
+    <h1>Thank you, we have your message</h1>
+    <p class="lead dark">We will get back to you personally. If your matter is urgent, call us on <a href="tel:+91{{ S.phone }}">{{ S.phone }}</a> or message us on WhatsApp.</p>
+    <p>
+      <a class="btn" href="{{ url_for('projects') }}">See our projects</a>
+      <a class="btn btn-outline" href="https://wa.me/{{ S.whatsapp }}">{{ icon('whatsapp', 20) }} WhatsApp</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

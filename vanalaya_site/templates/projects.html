@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_cards.html" import project_card %}
+{% block title %}Projects | {{ S.studio_name }}{% endblock %}
+{% block description %}Residential, commercial, eco-friendly, hospitality and interior design projects by Vanalaya Studio.{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow eyebrow-light">Our work</p>
+    <h1>Projects</h1>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="filters">
+      <div class="filter-tabs" role="tablist">
+        <a href="{{ url_for('projects', q=q or None) }}" class="{{ 'active' if not active }}">All</a>
+        {% for c in nav_categories %}
+        <a href="{{ url_for('projects', category=c.slug, q=q or None) }}" class="{{ 'active' if active == c.slug }}">{{ c.name }}{% if counts.get(c.slug) %} <small>{{ counts[c.slug] }}</small>{% endif %}</a>
+        {% endfor %}
+      </div>
+      <form class="search" method="get" action="{{ url_for('projects') }}" role="search">
+        {% if active %}<input type="hidden" name="category" value="{{ active }}">{% endif %}
+        <input type="search" name="q" value="{{ q }}" placeholder="Search projects or places" aria-label="Search projects">
+        <button class="btn btn-small" type="submit">Search</button>
+      </form>
+    </div>
+    {% if projects %}
+    <div class="grid">
+      {% for p in projects %}{{ project_card(p) }}{% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">No projects match that search. <a href="{{ url_for('projects') }}">See all projects</a>.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="stats">
+  <a class="stat {{ 'warn' if stats.new_enquiries }}" href="{{ url_for('admin_enquiries', status='new') }}"><strong>{{ stats.new_enquiries }}</strong><span>new enquiries</span></a>
+  <a class="stat" href="{{ url_for('admin_enquiries') }}"><strong>{{ stats.enquiries }}</strong><span>total enquiries</span></a>
+  <a class="stat" href="{{ url_for('admin_projects') }}"><strong>{{ stats.projects }}</strong><span>projects ({{ stats.hidden }} hidden)</span></a>
+  <a class="stat {{ 'warn' if stats.no_photos }}" href="{{ url_for('admin_projects') }}"><strong>{{ stats.no_photos }}</strong><span>projects without photos</span></a>
+</div>
+
+<div class="panel">
+  <h2>Quick actions</h2>
+  <div class="row">
+    <a class="btn btn-gold" href="{{ url_for('admin_project_new') }}">Add a project</a>
+    <a class="btn" href="{{ url_for('admin_testimonials') }}">Add a testimonial</a>
+    <a class="btn btn-light" href="{{ url_for('admin_site') }}">Edit About and contact text</a>
+    <a class="btn btn-light" href="{{ url_for('admin_services') }}">Edit services</a>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Latest enquiries</h2>
+  {% if latest %}
+  <div class="tablewrap"><table>
+    <tr><th>When</th><th>Name</th><th>Contact</th><th>Type</th><th>Status</th></tr>
+    {% for e in latest %}
+    <tr><td>{{ e.created_at | nicedate }}</td><td>{{ e.name }}</td><td>{{ e.phone }} {{ e.email }}</td><td>{{ e.project_type }}</td><td><span class="badge {{ e.status }}">{{ e.status }}</span></td></tr>
+    {% endfor %}
+  </table></div>
+  <p style="margin:12px 0 0"><a href="{{ url_for('admin_enquiries') }}">See all enquiries</a></p>
+  {% else %}<p class="muted">No enquiries yet. They will appear here when visitors use the contact form.</p>{% endif %}
+</div>
+{% endblock %}

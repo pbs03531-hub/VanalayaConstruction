@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_cards.html" import project_card %}
+{% block content %}
+<section class="hero">
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow">{{ S.tagline }}</p>
+      <h1>{{ S.hero_headline }}</h1>
+      <p class="lead">{{ S.hero_sub }}</p>
+      <div class="hero-buttons">
+        <a class="btn btn-gold" href="{{ url_for('contact') }}">{{ S.cta_text }}</a>
+        <a class="btn btn-ghost-light" href="{{ url_for('projects') }}">View our projects</a>
+      </div>
+      <ul class="hero-points">
+        <li>{{ icon('check', 18) }} Architecture and interiors</li>
+        <li>{{ icon('check', 18) }} Mud and bamboo specialists</li>
+        <li>{{ icon('check', 18) }} Civil engineering and sanction drawings</li>
+      </ul>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="hero-ring"><img src="{{ url_for('static', filename='img/logo-256.png') }}" alt="" width="256" height="256"></div>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap trust-in">
+    <div><strong>{{ total }}</strong><span>executed projects</span></div>
+    <div><strong>{{ n_cats }}</strong><span>project categories</span></div>
+    <div><strong>{{ n_services }}</strong><span>design and engineering services</span></div>
+    <div><strong>Coorg</strong><span>based in Virajpet</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Selected work</p>
+      <h2>Featured projects</h2>
+      <p class="sub">A look at spaces we have designed and built.</p>
+    </div>
+    <div class="grid">
+      {% for p in featured %}{{ project_card(p) }}{% endfor %}
+    </div>
+    <p class="center"><a class="btn" href="{{ url_for('projects') }}">See all projects</a></p>
+  </div>
+</section>
+
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">What we do</p>
+      <h2>Design, engineering and craft under one roof</h2>
+    </div>
+    <div class="grid grid-3">
+      {% for s in services %}
+      <div class="service">
+        <div class="service-icon">{{ icon(s.icon, 30) }}</div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="center"><a class="btn btn-outline" href="{{ url_for('services') }}">All services</a></p>
+  </div>
+</section>
+
+<section class="eco">
+  <div class="wrap eco-in">
+    <div>
+      <p class="eyebrow eyebrow-light">Our eco-friendly approach</p>
+      <h2>{{ S.eco_title }}</h2>
+      <p>{{ S.eco_text }}</p>
+      <a class="btn btn-gold" href="{{ url_for('projects', category='eco-friendly') }}">Explore eco-friendly projects</a>
+    </div>
+    <ul class="eco-list">
+      <li>{{ icon('bamboo', 28) }}<span><strong>Bamboo</strong> strong, fast-growing and renewable</span></li>
+      <li>{{ icon('leaf', 28) }}<span><strong>Mud</strong> keeps interiors cool, sourced close to site</span></li>
+      <li>{{ icon('sprout', 28) }}<span><strong>Sustainable design</strong> light, air and landscape worked into every plan</span></li>
+    </ul>
+  </div>
+</section>
+
+{% if testimonials %}
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Kind words</p>
+      <h2>What our clients say</h2>
+    </div>
+    <div class="grid grid-3">
+      {% for t in testimonials %}
+      <figure class="quote">
+        <blockquote>&ldquo;{{ t.quote }}&rdquo;</blockquote>
+        <figcaption><strong>{{ t.client_name }}</strong>{% if t.project_name %}<span>{{ t.project_name }}</span>{% endif %}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
